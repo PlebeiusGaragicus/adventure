@@ -16,12 +16,14 @@ class SplashScreen(arcade.View):
 
 
     def on_update(self, delta_time):
-        if time.time() > self.start_time + 3:
+        if time.time() > self.start_time + 1:
             self.show_next_view()
 
 
     def on_draw(self):
-        self.clear()
+        arcade.start_render()
+        # arcade.View.clear()
+
         color_with_alpha = arcade.color.WHITE + (self.alpha,)  # create a color object with the desired alpha value
         arcade.draw_text("Loading screen...", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          color_with_alpha,

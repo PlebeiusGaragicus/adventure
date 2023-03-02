@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# change folder to the folder where this script is located
+cd "$(dirname "$0")"
+
 source venv/bin/activate
 
-python3 -m src
+exec python3 -m src

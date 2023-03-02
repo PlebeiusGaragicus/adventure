@@ -1,4 +1,7 @@
 import arcade
+from arcade.experimental.crt_filter import CRTFilter
+from pyglet.math import Vec2
+
 import os
 
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -24,17 +27,35 @@ class AdventureView(arcade.View):
         self.player_sprite.center_y = 50
         self.all_sprites_list.append(self.player_sprite)
 
+        width, height = self.window.get_size()
+        # width, height = self.get_size()
+
+        self.crt_filter = CRTFilter(width, height,
+                            resolution_down_scale=0.5,
+                            hard_scan=-4.0,
+                            hard_pix=-1.5,
+                            display_warp = Vec2(1.0 / 32.0, 1.0 / 24.0),
+                            mask_dark=0.25,
+                            mask_light=.75)
+
 
     def on_show(self):
         arcade.set_background_color(arcade.color.AMAZON)
 
 
     def on_draw(self):
-        """ Render the screen. """
-
         # This command has to happen before we start drawing
-        self.clear()
+        # self.clear()
+        arcade.start_render()
+
+        self.crt_filter.use()
+        self.crt_filter.clear()
+
         self.all_sprites_list.draw()
+
+        self.window.use()
+        self.window.clear()
+        self.crt_filter.draw()
 
 
     def on_update(self, delta_time):
@@ -46,7 +67,7 @@ class AdventureView(arcade.View):
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
-        if key == arcade.key.ESCAPE:
+        if key in [arcade.key.Q, arcade.key.ESCAPE]:
             arcade.close_window()
         elif key == arcade.key.UP:
             self.player_sprite.change_y = MOVEMENT_SPEED
